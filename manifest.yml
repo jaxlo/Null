@@ -5,7 +5,7 @@ applications:
   disk_quota: 1G
   buildpack: nodejs_buildpack
   host: agar-clone
-  domain: mybluemix.net
+  domain: agoot.fly.io
   timeout: 180
   env:
     NPM_CONFIG_PRODUCTION: false

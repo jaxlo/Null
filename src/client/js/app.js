@@ -45,6 +45,7 @@ function startGame(type) {
     window.chat.registerFunctions();
     window.canvas.socket = socket;
     global.socket = socket;
+    console.log('Socket was setup');
 }
 
 // Checks if the nick chosen contains valid alphanumeric characters (and underscores).
@@ -325,7 +326,7 @@ function animloop() {
 
 function gameLoop() {
     if (global.gameStart) {
-        graph.fillStyle = global.backgroundColor;
+        graph.fillStyle = '#000000';// Black background
         graph.fillRect(0, 0, global.screen.width, global.screen.height);
 
         render.drawGrid(global, player, global.screen, graph);

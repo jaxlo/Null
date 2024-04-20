@@ -112,13 +112,10 @@ const drawCells = (cells, playerConfig, toggleMassState, borders, graph) => {
 };
 
 const drawGrid = (global, player, screen, graph) => {
-    graph.strokeStyle = global.lineColor;
+    graph.lineWidth = 4;
     graph.strokeStyle = '#0000ff';
 
-
-    graph.globalAlpha = 0.40;
     graph.globalAlpha = 0.3;
-
     graph.beginPath();
     // Calculate the center of the screen
     let halfWidth = 1000;

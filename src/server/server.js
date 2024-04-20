@@ -355,6 +355,8 @@ const sendLeaderboard = (socket) => {
         leaderboard
     });
 }
+
+
 const updateSpectator = (socketID) => {
     let playerData = {
         x: config.gameWidth / 2,
