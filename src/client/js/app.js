@@ -7,6 +7,29 @@ var global = require('./global');
 var playerNameInput = document.getElementById('playerNameInput');
 var socket;
 
+var timer;
+var timer_interval;
+var timeleft = document.querySelector('#timeleft');
+
+const updateTimer = () => {
+    window.timeleft.innerHTML = `${Math.floor(window.timer / 60)}:${(window.timer % 60).toString().padStart(2, '0')}`;
+};
+
+function play(sound) {
+	return new Promise((res) => {
+		sounds[sound].play()
+		sounds[sound].onended = res
+	})
+}
+
+var soundNames = ['pixelated-rush', 'q1', 'q2', 'q3', 'q4', 'ticktock', 'true', 'false']
+
+var sounds = {}
+
+for (var i = 0; i < soundNames.length; i++) {
+	sounds[soundNames[i]] = new Audio(`audio/${soundNames[i]}.mp3`)
+}
+
 var debug = function (args) {
     if (console && console.log) {
         console.log(args);
@@ -18,6 +41,9 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
 }
 
 function startGame(type) {
+    sounds['pixelated-rush'].loop = true;
+    sounds['pixelated-rush'].volume = 0.05;
+    play('pixelated-rush');
     global.playerName = playerNameInput.value.replace(/(<([^>]+)>)/ig, '').substring(0, 25);
     global.playerType = type;
 
@@ -170,7 +196,7 @@ function setupSocket(socket) {
     socket.on('disconnect', handleDisconnect);
 
     // Handle connection.
-    socket.on('welcome', function (playerSettings, gameSizes) {
+    socket.on('welcome', function (playerSettings, gameSizes, timer) {
         player = playerSettings;
         player.name = global.playerName;
         player.screenWidth = global.screen.width;
@@ -189,6 +215,33 @@ function setupSocket(socket) {
         global.game.width = gameSizes.width;
         global.game.height = gameSizes.height;
         resize();
+
+        window.timer = timer;
+        updateTimer();
+    });
+
+    socket.on('q', async (q, a) => {
+        await play('q' + q);
+        await play('ticktock');
+        socket.emit('scoreme', myans);
+        await play(a ? 'true' : 'false');
+
+        // let lower = () => {
+        //     sounds['pixelated-rush'].volume -= 0.05;
+        //     if (sounds['pixelated-rush'].volume < .1) {
+        //         clearInterval(t);
+        //     }
+        // }
+
+        // let t = setInterval(lower, 1);
+
+
+
+    })
+
+    socket.on('timer', (timer) => {
+        window.timer = timer;
+        updateTimer();
     });
 
     socket.on('playerDied', (data) => {

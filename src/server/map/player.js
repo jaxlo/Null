@@ -3,6 +3,7 @@
 const util = require('../lib/util');
 const sat = require('sat');
 const gameLogic = require('../game-logic');
+const config = require('../../../config');
 
 const MIN_SPEED = 6.25;
 const SPLIT_CELL_SPEED = 20;
@@ -96,9 +97,9 @@ exports.Player = class {
 
     /* Initalizes things that change with every respawn */
     init(position, defaultPlayerMass) {
-        this.cells = [new Cell(position.x, position.y, defaultPlayerMass, MIN_SPEED)];
+        this.cells = [new Cell(config.gameWidth / 2, position.y, defaultPlayerMass, MIN_SPEED)];
         this.massTotal = defaultPlayerMass;
-        this.x = position.x;
+        this.x = config.gameWidth / 2;
         this.y = position.y;
         this.target = {
             x: 0,

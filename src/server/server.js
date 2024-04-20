@@ -6,6 +6,11 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const SAT = require('sat');
+const EventEmitter = require('events');
+
+class MyEmitter extends EventEmitter {};
+
+const event = new MyEmitter(); // used to emit and recieve events
 
 const gameLogic = require('./game-logic');
 const loggingRepositry = require('./repositories/logging-repository');
@@ -23,6 +28,31 @@ const INIT_MASS_LOG = util.mathLog(config.defaultPlayerMass, config.slowBase);
 
 let leaderboard = [];
 let leaderboardChanged = false;
+
+let time_per_round = 0;
+let timer = -1;
+let timer_interval = null;
+let updateTimer = () => {
+    timer++;
+    if (timer % 15 == 3) {
+        let q = order[Math.floor((timer % 60) / 15)];
+        io.emit('q', q, ans[q-1] == 't');
+    }
+    if (timer % 60 == 0) {
+        shuffle(order);
+    } 
+    io.emit('timer', timer);
+};
+
+var order = [1, 2, 3, 4];
+var ans = 'tfft';
+
+function shuffle(array) { // from https://javascript.info/task/shuffle
+    for (let i = array.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
 
 const Vector = SAT.Vector;
 
@@ -82,19 +112,45 @@ const addPlayer = (socket) => {
         currentPlayer.screenHeight = data.screenHeight;
     });
 
-    socket.on('respawn', () => {
+    let respawn = () => {
         map.players.removePlayerByID(currentPlayer.id);
+
+        if (map.players.data.length == 0) {
+            clearInterval(timer_interval);
+            timer = time_per_round;
+            timer_interval = setInterval(updateTimer, 1000);
+            shuffle(order);
+        }
+        console.log(map.players.data.length)
+
         socket.emit('welcome', currentPlayer, {
             width: config.gameWidth,
             height: config.gameHeight
-        });
+        }, timer);
         console.log('[INFO] User ' + currentPlayer.name + ' has respawned');
-    });
+    };
+
+    socket.on('respawn', respawn);
+    event.on('respawnAllPlayers', respawn);
 
     socket.on('disconnect', () => {
         map.players.removePlayerByID(currentPlayer.id);
         console.log('[INFO] User ' + currentPlayer.name + ' has disconnected');
         socket.broadcast.emit('playerDisconnect', { name: currentPlayer.name });
+
+        if (map.players.data.length == 0) {
+            clearInterval(timer_interval);
+            timer = -1;
+        }
+    });
+
+    socket.on('scoreme', () => {
+        let real_ans = ans[order[Math.floor((timer % 60) / 15)]-1] == 't';
+        for (let i = 0; i < currentPlayer.cells.length; i++) {
+            let cell_ans = 1000 - currentPlayer.cells[i].x > 0;
+            if (cell_ans == real_ans) currentPlayer.changeCellMass(i, 100);
+            else currentPlayer.changeCellMass(i, -20);
+        }
     });
 
     socket.on('playerChat', (data) => {

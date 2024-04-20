@@ -283,3 +283,24 @@ input [type="image"]:focus{
  outline: 1px solid transparent;
  border-style: none;
 }
+
+#timer {
+    text-align: center;
+    pointer-events: none;
+    top: 6px;
+}
+
+#timer img {
+    position: absolute;
+    right: 38%;
+    filter: invert(1);
+}
+
+#timeleft {
+    font-size: 96px;
+    position: absolute;
+    margin: auto;
+    left: 46%;
+    top: 100px;
+    color: white;
+}
