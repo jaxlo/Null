@@ -3,7 +3,7 @@
 <head>
     <!-- Meta Properties -->
     <meta charset="UTF-8">
-    <title>Open Agar</title>
+    <title>Agoot</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <!-- CSS -->
     <link rel="stylesheet" href="css/main.css" />
@@ -26,13 +26,20 @@
     </div>
     <div id="startMenuWrapper">
         <div id="startMenu">
-            <p>Open Agar</p>
-            <input type="text" tabindex="0" autofocus placeholder="Enter your name here" id="playerNameInput" maxlength="25" />
-            <b class="input-error">Nick must be alphanumeric characters only!</b>
+            <p style="margin-bottom: 0px;">Play Agoot</p>
+            <p style="color: grey; font-size: small;">Agar.io + Kahoot</p>
+            <select id="playerNameInput" id="cars" autofocus>
+                <option value="uvu">Utah Valley University</option>
+                <option value="usu">Utah State University</option>
+                <option value="byu">Brigham Young University</option>
+            </select>
+            <!--<input type="text" tabindex="0" autofocus placeholder="Enter your name here" id="playerNameInput" maxlength="25" />-->
+            <b class="input-error">What are you doing changing university names in my swamp?!</b>
             <br />
             <a onclick="document.getElementById('spawn_cell').play();"><button id="startButton">Play</button></a>
-            <button id="spectateButton">Spectate</button>
-            <button id="settingsButton">Settings</button>
+            <!-- Let's hide these because we don't need them -->
+            <button id="spectateButton" style="display:none;">Spectate</button>
+            <button id="settingsButton" style="display:none;">Settings</button>
             <br />
             <div id="settings">
                 <h3>Settings</h3>
@@ -49,10 +56,10 @@
             <div id="instructions">
                 <h3>Gameplay</h3>
                 <ul>
-                    <li>Move your mouse on the screen to move your character.</li>
-                    <li>Eat food and other players in order to grow your character (food respawns every time a player eats it).</li>
-                    <li>A player's mass is the number of food particles eaten.</li>
-                    <li>Objective: Try to get fat and eat other players.</li>
+                    <li>Move your mouse on the screen to move your character</li>
+                    <li>Answer questions by moving your player to one side of the screen</li>
+                    <li>Objective: Try to get fat and eat other players while getting questions right</li>
+                    <li>The more mass you have, the more points you get for a correct question</li>
                 </ul>
             </div>
         </div>

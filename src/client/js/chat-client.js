@@ -162,6 +162,8 @@ class ChatClient {
     }
 
     toggleDarkMode() {
+        console.log("No color change for you")
+        /*
         var LIGHT = '#f2fbff',
             DARK = '#181818';
         var LINELIGHT = '#000000',
@@ -176,6 +178,7 @@ class ChatClient {
             global.lineColor = LINELIGHT;
             this.addSystemLine('Dark mode disabled.');
         }
+        */
     }
 
     toggleBorder() {

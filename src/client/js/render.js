@@ -114,6 +114,14 @@ const drawCells = (cells, playerConfig, toggleMassState, borders, graph) => {
 const drawGrid = (global, player, screen, graph) => {
     graph.lineWidth = 1;
     graph.strokeStyle = global.lineColor;
+    // Light mode colors:
+    let LIGHT = '#f2fbff';
+    let DARK = '#181818';
+    
+    // Dark mode colors:
+    let LINELIGHT = '#000000';
+    let LINEDARK = '#ffffff';
+
     graph.globalAlpha = 0.15;
     graph.beginPath();
 
