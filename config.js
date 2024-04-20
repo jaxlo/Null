@@ -1,5 +1,5 @@
 module.exports = {
-    host: "0.0.0.0",
+    host: ["0.0.0.0", "agoot.fly.dev"],
     port: 3000,
     logpath: "logger.php",
     foodMass: 1,
