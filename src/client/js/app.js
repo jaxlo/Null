@@ -11,6 +11,10 @@ var timer;
 var timer_interval;
 var timeleft = document.querySelector('#timeleft');
 
+const updateTimer = () => {
+    window.timeleft.innerHTML = `${Math.floor(window.timer / 60)}:${(window.timer % 60).toString().padStart(2, '0')}`;
+};
+
 var debug = function (args) {
     if (console && console.log) {
         console.log(args);
@@ -173,7 +177,7 @@ function setupSocket(socket) {
     socket.on('disconnect', handleDisconnect);
 
     // Handle connection.
-    socket.on('welcome', function (playerSettings, gameSizes) {
+    socket.on('welcome', function (playerSettings, gameSizes, timer) {
         player = playerSettings;
         player.name = global.playerName;
         player.screenWidth = global.screen.width;
@@ -193,15 +197,13 @@ function setupSocket(socket) {
         global.game.height = gameSizes.height;
         resize();
 
-        window.timer = 60;
-        window.timeleft.innerHTML = "1:00";
-        window.timer_interval = setInterval(function () {
-            window.timer--;
-            window.timeleft.innerHTML = `0:${window.timer < 10 ? '0' + window.timer : window.timer}`;
-            if (window.timer <= 0) {
-                clearInterval(window.timer_interval);
-            }
-        }, 1000);
+        window.timer = timer;
+        updateTimer();
+    });
+
+    socket.on('timer', (timer) => {
+        window.timer = timer;
+        updateTimer();
     });
 
     socket.on('playerDied', (data) => {
