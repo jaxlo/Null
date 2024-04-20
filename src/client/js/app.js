@@ -7,6 +7,10 @@ var global = require('./global');
 var playerNameInput = document.getElementById('playerNameInput');
 var socket;
 
+var timer;
+var timer_interval;
+var timeleft = document.querySelector('#timeleft');
+
 var debug = function (args) {
     if (console && console.log) {
         console.log(args);
@@ -188,6 +192,16 @@ function setupSocket(socket) {
         global.game.width = gameSizes.width;
         global.game.height = gameSizes.height;
         resize();
+
+        window.timer = 60;
+        window.timeleft.innerHTML = "1:00";
+        window.timer_interval = setInterval(function () {
+            window.timer--;
+            window.timeleft.innerHTML = `0:${window.timer < 10 ? '0' + window.timer : window.timer}`;
+            if (window.timer <= 0) {
+                clearInterval(window.timer_interval);
+            }
+        }, 1000);
     });
 
     socket.on('playerDied', (data) => {
