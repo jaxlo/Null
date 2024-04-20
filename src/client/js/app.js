@@ -223,7 +223,7 @@ function setupSocket(socket) {
     socket.on('q', async (q, a) => {
         await play('q' + q);
         await play('ticktock');
-        socket.emit('scoreme', myans);
+        socket.emit('scoreme');
         await play(a ? 'true' : 'false');
 
         // let lower = () => {
