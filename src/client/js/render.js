@@ -136,6 +136,8 @@ const drawGrid = (global, player, screen, graph) => {
         graph.stroke();
     }
 
+    // console.log(halfWidth - player.x > 0);
+
 
     // // Horizontal lines
     for (let y = -player.y; y < screen.height; y += screen.height / 18) {
