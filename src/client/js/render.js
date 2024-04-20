@@ -112,30 +112,55 @@ const drawCells = (cells, playerConfig, toggleMassState, borders, graph) => {
 };
 
 const drawGrid = (global, player, screen, graph) => {
-    graph.lineWidth = 1;
     graph.strokeStyle = global.lineColor;
-    // Light mode colors:
-    let LIGHT = '#f2fbff';
-    let DARK = '#181818';
-    
-    // Dark mode colors:
-    let LINELIGHT = '#000000';
-    let LINEDARK = '#ffffff';
+    graph.strokeStyle = '#0000ff';
 
-    graph.globalAlpha = 0.15;
+
+    graph.globalAlpha = 0.40;
+    graph.globalAlpha = 0.3;
+
     graph.beginPath();
+    // Calculate the center of the screen
+    let halfWidth = 1000;
 
+
+    // Vertical lines
     for (let x = -player.x; x < screen.width; x += screen.height / 18) {
+        // Set the color based on whether the line is in the left or right half
+        if (x + player.x - (screen.width/2) < halfWidth) {
+
+            graph.strokeStyle = '#0000FF'; // Blue for the left half
+        } else {
+            graph.strokeStyle = '#FF0000'; // Red for the right half
+        }
+        graph.beginPath();
         graph.moveTo(x, 0);
         graph.lineTo(x, screen.height);
+        graph.stroke();
     }
 
+
+    // // Horizontal lines
     for (let y = -player.y; y < screen.height; y += screen.height / 18) {
+        graph.strokeStyle = '#0000FF'; // Blue for the left half
+        graph.beginPath();
         graph.moveTo(0, y);
-        graph.lineTo(screen.width, y);
-    }
+        graph.lineTo(halfWidth - player.x + (screen.width/2), y);
+        graph.stroke();
 
-    graph.stroke();
+        graph.strokeStyle = '#FF0000'; // Red for the right half
+        graph.beginPath();
+        graph.moveTo(halfWidth - player.x + (screen.width/2), y);
+        graph.lineTo(screen.width, y);
+        graph.stroke();
+
+    }
+    //     graph.strokeStyle = '#0000FF'; // Blue for the left half
+    //     graph.lineTo(halfWidth, y);
+
+    //     graph.strokeStyle = '#FF0000'; // Red for the right half
+    //     graph.lineTo(screen.width, y);
+    // }
     graph.globalAlpha = 1;
 };
 
