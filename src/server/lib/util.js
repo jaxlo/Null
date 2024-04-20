@@ -36,6 +36,7 @@ exports.randomInRange = function (from, to) {
 exports.randomPosition = function (radius) {
     return {
         x: exports.randomInRange(radius, cfg.gameWidth - radius),
+        // x: cfg.gameWidth / 2,
         y: exports.randomInRange(radius, cfg.gameHeight - radius)
     };
 };

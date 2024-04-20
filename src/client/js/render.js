@@ -112,13 +112,10 @@ const drawCells = (cells, playerConfig, toggleMassState, borders, graph) => {
 };
 
 const drawGrid = (global, player, screen, graph) => {
-    graph.strokeStyle = global.lineColor;
+    graph.lineWidth = 4;
     graph.strokeStyle = '#0000ff';
 
-
-    graph.globalAlpha = 0.40;
     graph.globalAlpha = 0.3;
-
     graph.beginPath();
     // Calculate the center of the screen
     let halfWidth = 1000;
@@ -129,7 +126,7 @@ const drawGrid = (global, player, screen, graph) => {
         // Set the color based on whether the line is in the left or right half
         if (x + player.x - (screen.width/2) < halfWidth) {
 
-            graph.strokeStyle = '#0000FF'; // Blue for the left half
+            graph.strokeStyle = '#00FF00'; // Green for the left half
         } else {
             graph.strokeStyle = '#FF0000'; // Red for the right half
         }
@@ -139,10 +136,12 @@ const drawGrid = (global, player, screen, graph) => {
         graph.stroke();
     }
 
+    // console.log(halfWidth - player.x > 0);
+
 
     // // Horizontal lines
     for (let y = -player.y; y < screen.height; y += screen.height / 18) {
-        graph.strokeStyle = '#0000FF'; // Blue for the left half
+        graph.strokeStyle = '#00FF00'; // Green for the left half
         graph.beginPath();
         graph.moveTo(0, y);
         graph.lineTo(halfWidth - player.x + (screen.width/2), y);
@@ -155,12 +154,7 @@ const drawGrid = (global, player, screen, graph) => {
         graph.stroke();
 
     }
-    //     graph.strokeStyle = '#0000FF'; // Blue for the left half
-    //     graph.lineTo(halfWidth, y);
-
-    //     graph.strokeStyle = '#FF0000'; // Red for the right half
-    //     graph.lineTo(screen.width, y);
-    // }
+    
     graph.globalAlpha = 1;
 };
 

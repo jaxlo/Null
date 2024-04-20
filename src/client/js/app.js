@@ -15,6 +15,21 @@ const updateTimer = () => {
     window.timeleft.innerHTML = `${Math.floor(window.timer / 60)}:${(window.timer % 60).toString().padStart(2, '0')}`;
 };
 
+function play(sound) {
+	return new Promise((res) => {
+		sounds[sound].play()
+		sounds[sound].onended = res
+	})
+}
+
+var soundNames = ['pixelated-rush', 'q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'ticktock', 'true', 'false']
+
+var sounds = {}
+
+for (var i = 0; i < soundNames.length; i++) {
+	sounds[soundNames[i]] = new Audio(`audio/${soundNames[i]}.mp3`)
+}
+
 var debug = function (args) {
     if (console && console.log) {
         console.log(args);
@@ -26,6 +41,9 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
 }
 
 function startGame(type) {
+    sounds['pixelated-rush'].loop = true;
+    sounds['pixelated-rush'].volume = 0.05;
+    play('pixelated-rush');
     global.playerName = playerNameInput.value.replace(/(<([^>]+)>)/ig, '').substring(0, 25);
     global.playerType = type;
 
@@ -45,6 +63,7 @@ function startGame(type) {
     window.chat.registerFunctions();
     window.canvas.socket = socket;
     global.socket = socket;
+    console.log('Socket was setup');
 }
 
 // Checks if the nick chosen contains valid alphanumeric characters (and underscores).
@@ -201,6 +220,25 @@ function setupSocket(socket) {
         updateTimer();
     });
 
+    socket.on('q', async (q, a) => {
+        await play('q' + q);
+        await play('ticktock');
+        socket.emit('scoreme');
+        await play(a ? 'true' : 'false');
+
+        // let lower = () => {
+        //     sounds['pixelated-rush'].volume -= 0.05;
+        //     if (sounds['pixelated-rush'].volume < .1) {
+        //         clearInterval(t);
+        //     }
+        // }
+
+        // let t = setInterval(lower, 1);
+
+
+
+    })
+
     socket.on('timer', (timer) => {
         window.timer = timer;
         updateTimer();
@@ -325,7 +363,7 @@ function animloop() {
 
 function gameLoop() {
     if (global.gameStart) {
-        graph.fillStyle = global.backgroundColor;
+        graph.fillStyle = '#000000';// Black background
         graph.fillRect(0, 0, global.screen.width, global.screen.height);
 
         render.drawGrid(global, player, global.screen, graph);

@@ -179,6 +179,7 @@ class ChatClient {
             this.addSystemLine('Dark mode disabled.');
         }
         */
+        
     }
 
     toggleBorder() {

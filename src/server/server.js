@@ -29,16 +29,30 @@ const INIT_MASS_LOG = util.mathLog(config.defaultPlayerMass, config.slowBase);
 let leaderboard = [];
 let leaderboardChanged = false;
 
-let time_per_round = 60;
+let time_per_round = 0;
 let timer = -1;
 let timer_interval = null;
 let updateTimer = () => {
-    timer--;
-    if (timer <= 0) {
-        timer = time_per_round;
-        event.emit('respawnAllPlayers');
-    } else io.emit('timer', timer);
+    timer++;
+    if (timer % 15 == 3) {
+        let q = order[Math.floor((timer % (order.length*15)) / 15)];
+        io.emit('q', q, ans[q-1] == 't');
+    }
+    if (timer % order.length*15 == 0) {
+        shuffle(order);
+    } 
+    io.emit('timer', timer);
 };
+
+var order = [1, 2, 3, 4, 5, 6, 7, 8];
+var ans = 'tffttfft';
+
+function shuffle(array) { // from https://javascript.info/task/shuffle
+    for (let i = array.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
 
 const Vector = SAT.Vector;
 
@@ -105,6 +119,7 @@ const addPlayer = (socket) => {
             clearInterval(timer_interval);
             timer = time_per_round;
             timer_interval = setInterval(updateTimer, 1000);
+            shuffle(order);
         }
         console.log(map.players.data.length)
 
@@ -126,6 +141,15 @@ const addPlayer = (socket) => {
         if (map.players.data.length == 0) {
             clearInterval(timer_interval);
             timer = -1;
+        }
+    });
+
+    socket.on('scoreme', () => {
+        let real_ans = ans[order[Math.floor((timer % (order.length*15)) / 15)]-1] == 't';
+        for (let i = 0; i < currentPlayer.cells.length; i++) {
+            let cell_ans = 1000 - currentPlayer.cells[i].x > 0;
+            if (cell_ans == real_ans) currentPlayer.changeCellMass(i, 100);
+            else currentPlayer.changeCellMass(i, -20);
         }
     });
 
@@ -355,6 +379,8 @@ const sendLeaderboard = (socket) => {
         leaderboard
     });
 }
+
+
 const updateSpectator = (socketID) => {
     let playerData = {
         x: config.gameWidth / 2,

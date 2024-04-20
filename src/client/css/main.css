@@ -293,6 +293,7 @@ input [type="image"]:focus{
 #timer img {
     position: absolute;
     right: 38%;
+    filter: invert(1);
 }
 
 #timeleft {
@@ -301,4 +302,5 @@ input [type="image"]:focus{
     margin: auto;
     left: 46%;
     top: 100px;
+    color: white;
 }
