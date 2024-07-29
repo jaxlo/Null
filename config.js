@@ -20,7 +20,7 @@ module.exports = {
     gameWidth: 2000,// DONT CHANGE
     gameHeight: 4000,
     adminPass: "DEFAULT",
-    gameMass: 2000,
+    gameMass: 200000000,
     maxFood: 1050,
     maxVirus: 50,
     slowBase: 4.5,
